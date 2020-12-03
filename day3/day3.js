@@ -5,15 +5,15 @@ const gridRowsAsAnArray = day3data.split(/\n/);
 function getTreeImpactCountOfRoute({
   arr,
   debugMode,
-  zeroBasedStartingSlope,
-  moveRightThisManyCols,
+  down,
+  right,
 }){
   let treeCount = 0;
   const result = {};
-  for (let i=zeroBasedStartingSlope; i<arr.length; i++) {
-    const targetRowIndex = i;
-    const rowContent = arr[targetRowIndex];
-    const columnIndex = (targetRowIndex * moveRightThisManyCols) % rowContent.length;
+  let targetRowIndex = down;
+  for (let i=1; i<arr.length; i++) {
+    const rowContent = arr[targetRowIndex] || '';
+    const columnIndex = (i * right) % rowContent.length;
     if (!rowContent) {
       break;
     }
@@ -29,8 +29,8 @@ function getTreeImpactCountOfRoute({
     if (debugMode) {
       const runData = {
         symbol: treeFound ? 'X' : 'O',
-        rowIndex: targetRowIndex,
-        columnIndex,
+        right: columnIndex,
+        down: targetRowIndex,
         gridTileContent,
         treeFound,
         rowContent,
@@ -38,6 +38,8 @@ function getTreeImpactCountOfRoute({
 
       console.log(runData);
     }
+
+    targetRowIndex=targetRowIndex+down;
   }
 
   return treeCount;
@@ -47,8 +49,8 @@ const useTestData = false;
 const debugMode = false;
 const part1config = {
   arr: useTestData ? testGridRowsAsAnArray : gridRowsAsAnArray,
-  zeroBasedStartingSlope: 1,
-  moveRightThisManyCols: 3,
+  down: 1,
+  right: 3,
   debugMode
 };
 
@@ -57,17 +59,17 @@ const part1_treeCount = getTreeImpactCountOfRoute(part1config);
 const part2_coordinates = [[1],[3],[5],[7],[1,2]];
 const part2_treeCounts = part2_coordinates.reduce((acc, coordinate)=>{
   const [
-    moveRightThisManyCols,
-    zeroBasedStartingSlope = 1, // defaults to 1 since that's the majority case
+    right,
+    down = 1, // defaults to 1 since that's the majority case
   ] = coordinate;
   console.log({
-    right: moveRightThisManyCols,
-    down: zeroBasedStartingSlope,
+    right,
+    down,
   })
   acc.push(getTreeImpactCountOfRoute({
     ...part1config,
-    zeroBasedStartingSlope,
-    moveRightThisManyCols,
+    down,
+    right,
   }));
   return acc;
 }, []);
