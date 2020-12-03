@@ -56,7 +56,10 @@ const part1_treeCount = getTreeImpactCountOfRoute(part1config);
 
 const part2_coordinates = [[1],[3],[5],[7],[1,2]];
 const part2_treeCounts = part2_coordinates.reduce((acc, coordinate)=>{
-  const [moveRightThisManyCols, zeroBasedStartingSlope = 1] = coordinate;
+  const [
+    moveRightThisManyCols,
+    zeroBasedStartingSlope = 1, // defaults to 1 since that's the majority case
+  ] = coordinate;
   console.log({
     right: moveRightThisManyCols,
     down: zeroBasedStartingSlope,
